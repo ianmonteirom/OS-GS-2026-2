@@ -1,0 +1,42 @@
+﻿[Unit]
+Description=Dá Pra Ir? API — FIAP Global Solution 2026.2
+Documentation=https://github.com/FINELT/dapraIr
+After=network.target
+Wants=network.target
+
+[Service]
+Type=exec
+User=dapraIr
+Group=dapraIr
+WorkingDirectory=/opt/dapraIr/app
+
+# Arquivo de variáveis de ambiente (criado pelo 02-app.sh)
+EnvironmentFile=/etc/dapraIr.env
+
+# Comando de execução: substitua DaPraIr.API.dll se o nome mudar
+ExecStart=/usr/bin/dotnet /opt/dapraIr/app/DaPraIr.API.dll
+
+# Reiniciar sempre que o processo sair inesperadamente
+Restart=always
+RestartSec=5s
+TimeoutStartSec=30s
+TimeoutStopSec=15s
+
+# Logs via journald
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dapraIr
+
+# Endurecimento de segurança
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/opt/dapraIr/data /var/log/dapraIr
+
+# Limite de recursos
+LimitNOFILE=65536
+MemoryMax=512M
+
+[Install]
+WantedBy=multi-user.target
