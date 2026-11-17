@@ -3,6 +3,10 @@
 **FIAP Global Solution 2026.2 · Grupo FINELT**  
 Carlos Henrique (558003) · Mauricio Alves (556214) · Ian Monteiro (558652) · Bruno Silva (550416) · João Hoffmann (550763)
 
+## Vídeo de demonstração
+
+[![Vídeo OS — GS 2026.2](https://img.youtube.com/vi/zRwZ7wkx_34/0.jpg)](https://youtu.be/zRwZ7wkx_34)
+
 ---
 
 ## Visão geral
@@ -39,8 +43,8 @@ sudo bash scripts/01-infra.sh [HOSTNAME]
 ### 2. Deploy da aplicação
 
 ```bash
-# Publique primeiro no Windows/Mac:
-dotnet publish ../csharp/DaPraIr.API -c Release -o /tmp/dapraIr-pub
+# Publique o projeto C# (https://github.com/ianmonteirom/DaPraIrAPI):
+dotnet publish DaPraIr.API -c Release -o /tmp/dapraIr-pub
 
 # No servidor:
 sudo bash scripts/02-app.sh /tmp/dapraIr-pub
