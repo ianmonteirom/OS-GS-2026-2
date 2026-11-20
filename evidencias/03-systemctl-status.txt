@@ -1,0 +1,16 @@
+=== ETAPA 3: systemctl status ===
+● dapraIr.service - Dá Pra Ir? API — FIAP Global Solution 2026.2
+     Loaded: loaded (/etc/systemd/system/dapraIr.service; enabled; preset: enabled)
+     Active: active (running) since Thu 2026-11-19 23:16:09 -03; 21s ago
+ Invocation: 57ea292d4dd444cdbfaf283c0a5e2a9a
+       Docs: https://github.com/FINELT/dapraIr
+   Main PID: 192 (dotnet)
+      Tasks: 29 (limit: 9471)
+     Memory: 143.4M (max: 512M, available: 368.5M, peak: 143.4M)
+        CPU: 1.169s
+     CGroup: /system.slice/dapraIr.service
+             └─192 /usr/bin/dotnet /opt/dapraIr/app/DaPraIr.API.dll
+
+Nov 19 23:16:09 DESKTOP-SUCSMN4 systemd[1]: Starting dapraIr.service - Dá Pra Ir? API — FIAP Global Solution 2026.2...
+Nov 19 23:16:09 DESKTOP-SUCSMN4 systemd[1]: Started dapraIr.service - Dá Pra Ir? API — FIAP Global Solution 2026.2.
+Unit monitor.service could not be found.

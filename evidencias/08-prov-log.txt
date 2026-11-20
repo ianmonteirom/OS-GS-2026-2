@@ -1,0 +1,143 @@
+=== ETAPA 8: log de provisionamento ===
+[2026-11-17 12:51:44] === Início do provisionamento — dapraIr-api ===
+[2026-11-17 12:51:44] Configurando hostname: dapraIr-api
+[2026-11-17 12:51:44] Hostname configurado.
+[2026-11-17 12:51:44] Atualizando pacotes do sistema...
+[2026-11-17 12:53:38] Pacotes instalados.
+[2026-11-17 12:53:38] Configurando timezone e NTP...
+[2026-11-17 12:53:39] Timezone: America/Sao_Paulo
+[2026-11-17 12:53:39] Criando usuário de serviço: dapraIr
+[2026-11-17 12:53:39] Usuário dapraIr criado.
+[2026-11-17 12:53:39] Criando estrutura de diretórios...
+[2026-11-17 12:53:39] Diretórios criados.
+[2026-11-17 12:53:39] Configurando firewall...
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere                  
+5000/tcp                   ALLOW IN    Anywhere                   # Dá Pra Ir? API
+22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+5000/tcp (v6)              ALLOW IN    Anywhere (v6)              # Dá Pra Ir? API
+
+[2026-11-17 12:53:43] Firewall configurado.
+[2026-11-17 12:53:44] Habilitando fail2ban...
+[2026-11-17 12:53:44] Fail2ban ativo.
+[2026-11-17 12:53:44] === Provisionamento de infra concluído. Execute 02-app.sh para instalar a aplicação. ===
+[2026-11-17 12:55:05] === Instalação da aplicação Dá Pra Ir? ===
+[2026-11-17 12:55:05] Instalando .NET 8 SDK...
+[2026-11-17 13:03:31] .NET 8.0.428 instalado.
+[2026-11-17 13:03:31] Copiando publicação de /mnt/d/Estudos/FIAP/3 Ano/2 semestre/gs/csharp/publish...
+[2026-11-17 13:03:33] Arquivos copiados.
+[2026-11-17 13:03:33] Criando arquivo de configuração de ambiente...
+[2026-11-17 13:03:33] Arquivo de ambiente criado.
+[2026-11-17 13:03:33] Instalando serviço systemd...
+[2026-11-17 13:03:34] Serviço systemd instalado e habilitado.
+[2026-11-17 13:03:34] Iniciando serviço dapraIr...
+[2026-11-17 13:03:36] Serviço dapraIr está RODANDO.
+[2026-11-17 13:03:36] === Deploy concluído. API disponível em: http://172.29.15.119:5000/swagger ===
+[2026-11-17 16:10:56] === Início do provisionamento — dapraIr-api ===
+[2026-11-17 16:10:56] Configurando hostname: dapraIr-api
+[2026-11-17 16:10:57] Hostname configurado.
+[2026-11-17 16:10:57] Atualizando pacotes do sistema...
+[2026-11-17 16:11:02] Pacotes instalados.
+[2026-11-17 16:11:02] Configurando timezone e NTP...
+[2026-11-17 16:11:02] Timezone: America/Sao_Paulo
+[2026-11-17 16:11:02] Criando usuário de serviço: dapraIr
+[2026-11-17 16:11:02] Usuário dapraIr criado.
+[2026-11-17 16:11:02] Criando estrutura de diretórios...
+[2026-11-17 16:11:02] Diretórios criados.
+[2026-11-17 16:11:02] Configurando firewall...
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere                  
+5000/tcp                   ALLOW IN    Anywhere                   # Dá Pra Ir? API
+22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+5000/tcp (v6)              ALLOW IN    Anywhere (v6)              # Dá Pra Ir? API
+
+[2026-11-17 16:11:05] Firewall configurado.
+[2026-11-17 16:11:05] Habilitando fail2ban...
+[2026-11-17 16:11:06] Fail2ban ativo.
+[2026-11-17 16:11:06] === Provisionamento de infra concluído. Execute 02-app.sh para instalar a aplicação. ===
+[2026-11-17 16:11:21] === Instalação da aplicação Dá Pra Ir? ===
+[2026-11-17 16:11:21] .NET já instalado: 8.0.428
+[2026-11-17 16:11:21] Copiando publicação de /mnt/c/Temp/dapraIr-pub...
+[2026-11-17 16:11:26] Arquivos copiados.
+[2026-11-17 16:11:26] Criando arquivo de configuração de ambiente...
+[2026-11-17 16:11:26] Arquivo de ambiente criado.
+[2026-11-17 16:11:26] Instalando serviço systemd...
+[2026-11-17 16:11:26] Serviço systemd instalado e habilitado.
+[2026-11-17 16:11:26] Iniciando serviço dapraIr...
+[2026-11-17 16:11:28] Serviço dapraIr está RODANDO.
+[2026-11-17 16:11:28] === Deploy concluído. API disponível em: http://172.29.15.119:5000/swagger ===
+[2026-11-19 23:16:11] === Início do provisionamento — dapraIr-api ===
+[2026-11-19 23:16:11] Configurando hostname: dapraIr-api
+[2026-11-19 23:16:11] Hostname configurado.
+[2026-11-19 23:16:11] Atualizando pacotes do sistema...
+[2026-11-19 23:16:23] Pacotes instalados.
+[2026-11-19 23:16:23] === Configuração de rede ===
+[2026-11-19 23:16:23] Interface e endereçamento IP:
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet 10.255.255.254/32 brd 10.255.255.254 scope global lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host proto kernel_lo 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1280 qdisc mq state UP group default qlen 1000
+    link/ether 00:15:5d:8d:25:f6 brd ff:ff:ff:ff:ff:ff
+    altname enx00155d8d25f6
+    inet 172.29.15.119/20 brd 172.29.15.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::215:5dff:fe8d:25f6/64 scope link proto kernel_ll 
+       valid_lft forever preferred_lft forever
+[2026-11-19 23:16:23] Tabela de rotas:
+default via 172.29.0.1 dev eth0 proto kernel onlink 
+172.29.0.0/20 dev eth0 proto kernel scope link src 172.29.15.119 
+[2026-11-19 23:16:23] DNS configurado:
+# This file was automatically generated by WSL. To stop automatic generation of this file, add the following entry to /etc/wsl.conf:
+# [network]
+# generateResolvConf = false
+nameserver 10.255.255.254
+[2026-11-19 23:16:23] systemd-resolved ativo.
+[2026-11-19 23:16:23] Conectividade OK (ping 8.8.8.8 bem-sucedido).
+[2026-11-19 23:16:24] AVISO: resolução de DNS não verificada (host/nslookup não disponíveis ou sem resposta).
+[2026-11-19 23:16:24] === Rede configurada ===
+[2026-11-19 23:16:24] Configurando timezone e NTP...
+[2026-11-19 23:16:24] Timezone: America/Sao_Paulo
+[2026-11-19 23:16:24] Usuário dapraIr já existe — pulando.
+[2026-11-19 23:16:24] Criando estrutura de diretórios...
+[2026-11-19 23:16:24] Diretórios criados.
+[2026-11-19 23:16:24] Configurando firewall...
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere                  
+5000/tcp                   ALLOW IN    Anywhere                   # Dá Pra Ir? API
+22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+5000/tcp (v6)              ALLOW IN    Anywhere (v6)              # Dá Pra Ir? API
+
+[2026-11-19 23:16:29] Firewall configurado.
+[2026-11-19 23:16:29] Habilitando fail2ban...
+[2026-11-19 23:16:30] Fail2ban ativo.
+[2026-11-19 23:16:30] === Provisionamento de infra concluído. Execute 02-app.sh para instalar a aplicação. ===
+[2026-11-19 23:16:30] === Instalação da aplicação Dá Pra Ir? ===
+[2026-11-19 23:16:30] .NET já instalado: 8.0.428
+[2026-11-19 23:16:30] Copiando publicação de /mnt/c/Temp/dapraIr-pub...
+[2026-11-19 23:16:31] Arquivos copiados.
+[2026-11-19 23:16:31] Criando arquivo de configuração de ambiente...
+[2026-11-19 23:16:31] Arquivo de ambiente criado.
+[2026-11-19 23:16:31] Instalando scripts de monitoramento em /opt/dapraIr/scripts/...

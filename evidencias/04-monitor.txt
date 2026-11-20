@@ -1,0 +1,34 @@
+=== ETAPA 4: 03-monitor.sh ===
+/tmp/script_fixed.sh: line 1: ﻿#!/usr/bin/env: No such file or directory
+[2026-11-19 23:16:31] INFO  ──────────────────────────────────────────
+[2026-11-19 23:16:31] INFO  === RELATÓRIO DE MONITORAMENTO: 2026-11-19 23:16:31 ===
+[2026-11-19 23:16:31] INFO  Hostname: dapraIr-api
+[2026-11-19 23:16:31] INFO  Uptime:   up 2 minutes
+[2026-11-19 23:16:31] INFO  
+[2026-11-19 23:16:31] INFO  CPU uso: 2%
+[2026-11-19 23:16:31] INFO  Memória uso: 8%  (total: 7902 MB)
+[2026-11-19 23:16:31] INFO  Disco /usr/lib/modules/6.18.58.1-microsoft-standard-WSL2: 0%
+[2026-11-19 23:16:31] INFO  Disco /usr/src/linux-headers-6.18.58.1-microsoft-standard-WSL2: 100%
+[2026-11-19 23:16:31] ALERTA Disco /usr/src/linux-headers-6.18.58.1-microsoft-standard-WSL2 acima do limite! Uso: 100% (limite: 80%)
+[2026-11-19 23:16:31] INFO  Disco /mnt/wsl: 1%
+[2026-11-19 23:16:31] INFO  Disco /usr/lib/wsl/drivers: 92%
+[2026-11-19 23:16:31] ALERTA Disco /usr/lib/wsl/drivers acima do limite! Uso: 92% (limite: 80%)
+[2026-11-19 23:16:31] INFO  Disco /: 1%
+[2026-11-19 23:16:31] INFO  Disco /mnt/wslg: 1%
+[2026-11-19 23:16:31] INFO  Disco /usr/lib/wsl/lib: 0%
+[2026-11-19 23:16:31] INFO  Disco /init: 1%
+[2026-11-19 23:16:31] INFO  Disco /run: 1%
+[2026-11-19 23:16:31] INFO  Disco /run/lock: 0%
+[2026-11-19 23:16:31] INFO  Disco /run/shm: 0%
+[2026-11-19 23:16:31] INFO  Disco /mnt/wslg/versions.txt: 1%
+[2026-11-19 23:16:31] INFO  Disco /mnt/wslg/doc: 1%
+[2026-11-19 23:16:31] INFO  Disco /mnt/c: 92%
+[2026-11-19 23:16:31] ALERTA Disco /mnt/c acima do limite! Uso: 92% (limite: 80%)
+[2026-11-19 23:16:31] INFO  Disco /mnt/d: 90%
+[2026-11-19 23:16:31] ALERTA Disco /mnt/d acima do limite! Uso: 90% (limite: 80%)
+[2026-11-19 23:16:31] INFO  Disco /mnt/e: 85%
+[2026-11-19 23:16:31] ALERTA Disco /mnt/e acima do limite! Uso: 85% (limite: 80%)
+[2026-11-19 23:16:31] INFO  Disco /mnt/f: 20%
+[2026-11-19 23:16:31] INFO  Disco /run/credentials/systemd-journald.service: 0%
+[2026-11-19 23:16:31] INFO  Disco /run/credentials/systemd-resolved.service: 0%
+[2026-11-19 23:16:31] INFO  Disco /run/credentials/getty@tty1.service: 0%

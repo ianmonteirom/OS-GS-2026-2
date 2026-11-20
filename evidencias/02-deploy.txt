@@ -1,0 +1,10 @@
+=== ETAPA 2: 02-app.sh ===
+/tmp/script_fixed.sh: line 1: ﻿#!/usr/bin/env: No such file or directory
+[2026-11-19 23:16:30] === Instalação da aplicação Dá Pra Ir? ===
+[2026-11-19 23:16:30] .NET já instalado: 8.0.428
+[2026-11-19 23:16:30] Copiando publicação de /mnt/c/Temp/dapraIr-pub...
+[2026-11-19 23:16:31] Arquivos copiados.
+[2026-11-19 23:16:31] Criando arquivo de configuração de ambiente...
+[2026-11-19 23:16:31] Arquivo de ambiente criado.
+[2026-11-19 23:16:31] Instalando scripts de monitoramento em /opt/dapraIr/scripts/...
+cp: cannot stat '/tmp/03-monitor.sh': No such file or directory
