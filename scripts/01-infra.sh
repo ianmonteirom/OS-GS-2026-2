@@ -35,6 +35,36 @@ apt-get install -y -qq \
   systemd-timesyncd
 log "Pacotes instalados."
 
+# ── 4. Configuração de rede (IP, rotas e DNS) ────────────────────────────────
+log "=== Configuração de rede ==="
+log "Interface e endereçamento IP:"
+ip addr show | tee -a "$LOG"
+log "Tabela de rotas:"
+ip route show | tee -a "$LOG"
+log "DNS configurado:"
+cat /etc/resolv.conf | tee -a "$LOG"
+
+# Garantir resolução de nomes funcional via systemd-resolved
+if systemctl is-active --quiet systemd-resolved 2>/dev/null; then
+  log "systemd-resolved ativo."
+else
+  log "Habilitando systemd-resolved..."
+  systemctl enable --now systemd-resolved 2>/dev/null || true
+fi
+
+# Verificar conectividade e DNS
+if ping -c 1 -W 3 8.8.8.8 &>/dev/null; then
+  log "Conectividade OK (ping 8.8.8.8 bem-sucedido)."
+else
+  log "AVISO: sem conectividade com 8.8.8.8 (pode ser restrição de rede/WSL)."
+fi
+if host google.com &>/dev/null 2>&1 || nslookup google.com &>/dev/null 2>&1; then
+  log "Resolução de DNS OK."
+else
+  log "AVISO: resolução de DNS não verificada (host/nslookup não disponíveis ou sem resposta)."
+fi
+log "=== Rede configurada ==="
+
 # ── 4. Timezone e NTP ────────────────────────────────────────────────────────
 log "Configurando timezone e NTP..."
 timedatectl set-timezone America/Sao_Paulo

@@ -3,7 +3,9 @@
 **FIAP Global Solution 2026.2 · Grupo FINELT**  
 Carlos Henrique (558003) · Mauricio Alves (556214) · Ian Monteiro (558652) · Bruno Silva (550416) · João Hoffmann (550763)
 
-## Vídeo de demonstração
+---
+
+## Vídeo demonstrativo
 
 [![Vídeo OS — GS 2026.2](https://img.youtube.com/vi/zRwZ7wkx_34/0.jpg)](https://youtu.be/zRwZ7wkx_34)
 
@@ -11,20 +13,22 @@ Carlos Henrique (558003) · Mauricio Alves (556214) · Ian Monteiro (558652) · 
 
 ## Visão geral
 
-Scripts Bash para provisionar, fazer o deploy e monitorar a API **Dá Pra Ir?** em servidor Linux (Ubuntu 22.04 LTS).  
-Serviço systemd garante reinício automático em caso de falha.
+Scripts Bash para provisionar, fazer o deploy e monitorar a API **Dá Pra Ir?** em servidor Linux (Ubuntu 22.04 LTS / WSL2).  
+Dois serviços systemd garantem disponibilidade contínua: um para a aplicação, outro para o monitoramento de recursos.
 
 ---
 
 ## Pré-requisitos
 
-- Ubuntu 22.04 LTS (ou derivado)
-- Acesso `sudo`
+- Ubuntu 22.04 LTS (ou WSL2 com Ubuntu)
+- Acesso `sudo` / root
 - Conexão com internet (para baixar pacotes)
 
 ---
 
-## Como usar
+## Como reproduzir o ambiente
+
+Execute os scripts **em ordem** como root:
 
 ### 1. Provisionamento de infraestrutura
 
@@ -32,49 +36,56 @@ Serviço systemd garante reinício automático em caso de falha.
 sudo bash scripts/01-infra.sh [HOSTNAME]
 ```
 
+O script:
 - Define hostname e `/etc/hosts`
-- Instala pacotes essenciais (`curl`, `git`, `htop`, `ufw`, `fail2ban`)
-- Configura timezone `America/Sao_Paulo`
-- Cria usuário de serviço `dapraIr` (sem shell, sem home pública)
+- **Exibe e registra a configuração de rede** (IP, rotas, DNS)
+- Verifica conectividade e resolução de nomes
+- Instala pacotes essenciais (`curl`, `git`, `htop`, `ufw`, `fail2ban`, `net-tools`)
+- Configura timezone `America/Sao_Paulo` + NTP
+- Cria usuário de serviço `dapraIr` (sem shell)
 - Cria diretórios `/opt/dapraIr/app`, `/opt/dapraIr/data`, `/var/log/dapraIr`
 - Configura firewall UFW (bloqueia tudo, libera SSH + porta 5000)
 - Habilita fail2ban
 
-### 2. Deploy da aplicação
+### 2. Deploy da aplicação + serviços
 
 ```bash
-# Publique o projeto C# (https://github.com/ianmonteirom/DaPraIrAPI):
+# Publicar o projeto C# (https://github.com/ianmonteirom/DaPraIrAPI):
 dotnet publish DaPraIr.API -c Release -o /tmp/dapraIr-pub
 
-# No servidor:
+# No servidor / WSL:
 sudo bash scripts/02-app.sh /tmp/dapraIr-pub
 ```
 
+O script:
 - Instala .NET 8 SDK via repositório oficial Microsoft
-- Copia binários publicados para `/opt/dapraIr/app`
+- Copia binários para `/opt/dapraIr/app`
+- Copia scripts de monitoramento para `/opt/dapraIr/scripts/`
 - Cria `/etc/dapraIr.env` com variáveis de ambiente
-- Instala e habilita o serviço systemd `dapraIr.service`
-- Inicia o serviço e verifica o status
+- Instala e habilita **dois serviços systemd**: `dapraIr.service` e `monitor.service`
+- Inicia ambos os serviços e verifica o status
 
-### 3. Monitoramento
+### 3. Monitoramento manual (opcional)
 
 ```bash
-# Verificação única (mostra relatório e sai)
+# Verificação única
 sudo bash scripts/03-monitor.sh
 
-# Loop contínuo (a cada 60s)
+# Loop contínuo a cada 60s (também executado pelo monitor.service)
 sudo bash scripts/03-monitor.sh --daemon
 ```
 
-Monitoramento verifica:
-- CPU (alerta acima de 85%)
-- Memória RAM (alerta acima de 90%)
-- Disco — todos os pontos de montagem (alerta acima de 80%)
-- Status do serviço `dapraIr` — reinicia automaticamente se inativo
+### 4. Testes de falha e recuperação
 
-Logs em:
-- `/var/log/dapraIr/monitor.log` — relatório completo
-- `/var/log/dapraIr/alertas.log` — somente alertas
+```bash
+sudo bash scripts/04-testes-falha.sh
+```
+
+Executa automaticamente:
+- **Teste 1:** Para o serviço `dapraIr` → aguarda 8s → verifica auto-restart
+- **Teste 2:** Para o serviço `monitor` → aguarda 12s → verifica auto-restart
+- **Teste 3:** Estresse de CPU (loop Bash ou `stress-ng`) → verifica geração de alerta
+- **Teste 4:** Falha controlada em script → verifica registro de erro no log
 
 ---
 
@@ -82,34 +93,71 @@ Logs em:
 
 | Arquivo | Descrição |
 |---|---|
-| `scripts/01-infra.sh` | Provisiona servidor — hostname, pacotes, usuário, firewall |
-| `scripts/02-app.sh` | Deploy da API — .NET, binários, env, systemd |
+| `scripts/01-infra.sh` | Provisiona servidor — hostname, rede, DNS, pacotes, usuário, firewall |
+| `scripts/02-app.sh` | Deploy da API — .NET 8, binários, env, dois serviços systemd |
 | `scripts/03-monitor.sh` | Monitora CPU/mem/disco; auto-restart do serviço |
-| `systemd/dapraIr.service` | Unit file para gerenciamento do processo pela systemd |
+| `scripts/04-testes-falha.sh` | Testes de falha e recuperação dos serviços |
+| `systemd/dapraIr.service` | Serviço systemd da API com hardening de segurança |
+| `systemd/monitor.service` | Serviço systemd do monitoramento (inicia com o sistema) |
 
 ---
 
-## Serviço systemd
+## Serviços systemd
+
+### dapraIr — API da aplicação
 
 ```bash
-# Verificar status
 systemctl status dapraIr
-
-# Reiniciar
+sudo systemctl start dapraIr
+sudo systemctl stop dapraIr
 sudo systemctl restart dapraIr
-
-# Ver logs em tempo real
 journalctl -u dapraIr -f
-
-# Desabilitar na inicialização
-sudo systemctl disable dapraIr
 ```
 
-O service file em `systemd/dapraIr.service` configura:
-- Restart automático com delay de 5s
-- Variáveis de ambiente carregadas de `/etc/dapraIr.env`
-- Proteções de segurança (`NoNewPrivileges`, `ProtectSystem`, `PrivateTmp`)
-- Limite de memória: 512 MB
+### monitor — Monitoramento de recursos
+
+```bash
+systemctl status monitor
+sudo systemctl start monitor
+sudo systemctl stop monitor
+sudo systemctl restart monitor
+journalctl -u monitor -f
+```
+
+Ambos os serviços têm `Restart=always` — reiniciam automaticamente em caso de falha.
+
+---
+
+## Logs
+
+| Arquivo | Conteúdo |
+|---|---|
+| `/var/log/dapraIr-provisionamento.log` | Log completo dos scripts 01 e 02 |
+| `/var/log/dapraIr/monitor.log` | Relatórios de monitoramento (CPU, RAM, disco, serviço) |
+| `/var/log/dapraIr/alertas.log` | Somente alertas de consumo elevado |
+| `/var/log/dapraIr/testes-falha.log` | Resultados dos testes de falha |
+
+---
+
+## Requisitos técnicos demonstrados
+
+| Requisito | Script / Arquivo |
+|---|---|
+| **Configuração de hostname** | `01-infra.sh` — `hostnamectl set-hostname` |
+| **Configuração de rede (IP, rotas, DNS)** | `01-infra.sh` — `ip addr`, `ip route`, `resolv.conf`, conectividade |
+| **Variáveis e parâmetros** | Todos os scripts — variáveis no topo |
+| **Estruturas de controle** (`if`, `while`, `for`) | `03-monitor.sh`, `02-app.sh` |
+| **Funções** | `log()`, `alerta()`, `erro()`, `verificar_cpu()`, `verificar_memoria()`, `verificar_disco()` |
+| **Redirecionamento** (`tee -a`) | `03-monitor.sh` — logs duplos com `tee -a` |
+| **Provisionamento automatizado** | `01-infra.sh` + `02-app.sh` |
+| **Serviço systemd da aplicação** | `systemd/dapraIr.service` + `02-app.sh` |
+| **Serviço systemd de monitoramento** | `systemd/monitor.service` — inicia com o sistema |
+| **Monitoramento de recursos** | `03-monitor.sh` — `/proc/meminfo`, `top`, `df -h` |
+| **Alertas de consumo elevado** | `03-monitor.sh` — CPU >85%, RAM >90%, Disco >80% |
+| **Tolerância a falhas** | `Restart=always`, `RestartSec=5–10s` em ambos os serviços |
+| **Testes de falha** | `04-testes-falha.sh` — 4 testes automatizados |
+| **Segurança** | UFW, fail2ban, usuário de serviço sem shell, `ProtectSystem=strict` |
+| **Logs de auditoria** | 4 arquivos de log separados por finalidade |
 
 ---
 
@@ -123,15 +171,6 @@ Ou acesse `http://<ip-do-servidor>:5000/swagger` no navegador.
 
 ---
 
-## Requisitos técnicos demonstrados
+## Evidências
 
-| Requisito | Script / Arquivo |
-|---|---|
-| **Provisionamento automatizado** | `01-infra.sh` |
-| **Variáveis e parâmetros** | Todos os scripts |
-| **Estruturas de controle** (`if`, `while`, `for`) | `03-monitor.sh` |
-| **Funções** | `log()`, `alerta()`, `verificar_cpu()`, etc. em `03-monitor.sh` |
-| **Redirecionamento** (`tee -a`) | `03-monitor.sh` — logs duplos |
-| **Serviço systemd** | `systemd/dapraIr.service` + `02-app.sh` |
-| **Monitoramento de recursos** | `/proc/meminfo`, `top`, `df` em `03-monitor.sh` |
-| **Segurança** | UFW, fail2ban, usuário de serviço sem shell, `ProtectSystem` |
+Ver pasta [`evidencias/`](evidencias/) com mapa do vídeo e lista de screenshots.

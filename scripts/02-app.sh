@@ -64,34 +64,55 @@ chmod 640 /etc/dapraIr.env
 chown root:"$SERVICE_USER" /etc/dapraIr.env
 log "Arquivo de ambiente criado."
 
-# ── 4. Instalar systemd service ──────────────────────────────────────────────
-SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-SERVICE_FILE="$SCRIPT_DIR/../systemd/dapraIr.service"
+# ── 4. Copiar scripts de monitoramento ───────────────────────────────────────
+log "Instalando scripts de monitoramento em /opt/dapraIr/scripts/..."
+install -d -m 755 /opt/dapraIr/scripts
+SCRIPTS_DIR="$(dirname "$(realpath "$0")")"
+cp "$SCRIPTS_DIR/03-monitor.sh" /opt/dapraIr/scripts/03-monitor.sh
+chmod 755 /opt/dapraIr/scripts/03-monitor.sh
+log "Scripts instalados."
 
-if [[ -f "$SERVICE_FILE" ]]; then
-  log "Instalando serviço systemd..."
-  cp "$SERVICE_FILE" /etc/systemd/system/dapraIr.service
-  systemctl daemon-reload
-  systemctl enable dapraIr.service
-  log "Serviço systemd instalado e habilitado."
+# ── 5. Instalar systemd service ──────────────────────────────────────────────
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+SERVICE_APP="$SCRIPT_DIR/../systemd/dapraIr.service"
+SERVICE_MON="$SCRIPT_DIR/../systemd/monitor.service"
+
+if [[ -f "$SERVICE_APP" ]]; then
+  log "Instalando serviço dapraIr..."
+  cp "$SERVICE_APP" /etc/systemd/system/dapraIr.service
+  log "Serviço dapraIr instalado."
 else
-  log "AVISO: Arquivo $SERVICE_FILE não encontrado. Instale manualmente."
+  log "AVISO: $SERVICE_APP não encontrado."
 fi
+
+if [[ -f "$SERVICE_MON" ]]; then
+  log "Instalando serviço monitor..."
+  cp "$SERVICE_MON" /etc/systemd/system/monitor.service
+  log "Serviço monitor instalado."
+else
+  log "AVISO: $SERVICE_MON não encontrado."
+fi
+
+systemctl daemon-reload
+systemctl enable dapraIr.service monitor.service
+log "Serviços habilitados para iniciar com o sistema."
 
 # ── 5. Ajustar permissões do banco ───────────────────────────────────────────
 chown "$SERVICE_USER:$SERVICE_USER" "$DATA_DIR"
 chmod 750 "$DATA_DIR"
 
-# ── 6. Iniciar serviço ───────────────────────────────────────────────────────
-if systemctl is-enabled dapraIr.service &>/dev/null; then
-  log "Iniciando serviço dapraIr..."
-  systemctl start dapraIr.service
-  sleep 2
-  if systemctl is-active --quiet dapraIr.service; then
-    log "Serviço dapraIr está RODANDO."
-  else
-    log "ERRO: Serviço não iniciou. Verifique: journalctl -u dapraIr -n 50"
+# ── 7. Iniciar serviços ───────────────────────────────────────────────────────
+for svc in dapraIr monitor; do
+  if systemctl is-enabled "${svc}.service" &>/dev/null; then
+    log "Iniciando serviço ${svc}..."
+    systemctl start "${svc}.service" || true
+    sleep 2
+    if systemctl is-active --quiet "${svc}.service"; then
+      log "Serviço ${svc} está RODANDO."
+    else
+      log "AVISO: Serviço ${svc} não iniciou. Verifique: journalctl -u ${svc} -n 50"
+    fi
   fi
-fi
+done
 
 log "=== Deploy concluído. API disponível em: http://$(hostname -I | awk '{print $1}'):5000/swagger ==="

@@ -1,0 +1,27 @@
+[Unit]
+Description=Monitor de recursos — Dá Pra Ir? (CPU/RAM/Disco)
+Documentation=https://github.com/ianmonteirom/OS-GS-2026-2
+After=network.target dapraIr.service
+Wants=dapraIr.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/bin/bash /opt/dapraIr/scripts/03-monitor.sh --daemon
+
+# Reiniciar sempre em caso de falha
+Restart=always
+RestartSec=10s
+TimeoutStartSec=30s
+
+# Logs via journald
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dapraIr-monitor
+
+# Tolerância a falhas: reinicia até 5 vezes em 60 segundos
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
